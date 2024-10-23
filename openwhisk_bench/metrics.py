@@ -40,11 +40,20 @@ def benchmark_statistics(metrics_list):
     client_elapsed_times = [m['client_elapsed_time'] for m in metrics_list]
     success_rate = sum(1 for m in metrics_list if m['success']) / len(metrics_list) * 100
 
+    def calculate_stats(data):
+        """Calculates avg, min, max, and std for a given list of data."""
+        return {
+            'avg': statistics.mean(data),
+            'min': min(data),
+            'max': max(data),
+            'std': statistics.stdev(data) if len(data) > 1 else 0
+        }
+
     stats = {
-        'initTime': {'avg': statistics.mean(init_times), 'min': min(init_times), 'max': max(init_times), 'std': statistics.stdev(init_times)},
-        'waitTime': {'avg': statistics.mean(wait_times), 'min': min(wait_times), 'max': max(wait_times), 'std': statistics.stdev(wait_times)},
-        'duration': {'avg': statistics.mean(durations), 'min': min(durations), 'max': max(durations), 'std': statistics.stdev(durations)},
-        'client_elapsed_time': {'avg': statistics.mean(client_elapsed_times), 'min': min(client_elapsed_times), 'max': max(client_elapsed_times), 'std': statistics.stdev(client_elapsed_times)},
+        'initTime': calculate_stats(init_times),
+        'waitTime': calculate_stats(wait_times),
+        'duration': calculate_stats(durations),
+        'client_elapsed_time': calculate_stats(client_elapsed_times),
         'success_rate': success_rate
     }
     return stats
