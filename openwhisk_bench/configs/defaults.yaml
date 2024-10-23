@@ -1,0 +1,18 @@
+num_runs: 1
+num_invocations: 100
+warmup_invocations: 1
+workers: 1
+verbose: false
+print_csv: false
+time_limit: 30
+time_precision: 1
+function: foo
+blocking: false
+input_file: null
+input_string: null
+output_file: null
+payload:
+  param1: default
+  param2: payload
+apihost: http://172.17.0.1:3233/api/v1
+authorization: Basic MjNiYzQ2YjEtNzFmNi00ZWQ1LThjNTQtODE2YWE0ZjhjNTAyOjEyM3pPM3haQ0xyTU42djJCS0sxZFhZRnBYbFBrY2NPRnFtMTJDZEFzTWdSVTRWck5aOWx5R1ZDR3VNREdJd1A=
