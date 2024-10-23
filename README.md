@@ -24,7 +24,7 @@ The tool can be executed from the command line with various arguments to customi
 
 ## Basic Example
 ```bash
-python benchmark.py -f add -s '{"param1": 3, "param2": 1}'
+python run_benchmark.py -f add -s '{"param1": 3, "param2": 1}'
 ```
 
 # TODO:
