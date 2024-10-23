@@ -6,7 +6,7 @@ verbose: false
 print_csv: false
 time_limit: 30
 time_precision: 1
-function: foo
+function: noop
 blocking: false
 input_file: null
 input_string: null

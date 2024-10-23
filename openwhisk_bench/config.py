@@ -14,9 +14,6 @@ class Config:
         """
         Load default configurations from a yaml file
         """
-
-        #print current path
-        print(os.getcwd())
         
         with open(config_path, 'r') as file:
             config = yaml.safe_load(file)
@@ -36,11 +33,7 @@ class Config:
         self.time_precision = config['time_precision']
         self.apihost = config['apihost']
         self.authorization = config['authorization']
-
-        # Payload is not loaded from the configuration file
         self.payload = config['payload']
-
-
 
 
     def print_config(self):
@@ -133,28 +126,36 @@ class Config:
         parser.add_argument('-a', '--authorization', type=str, default=self.authorization, metavar='',
                             help='Authorization (default: {})'.format(self.authorization))
 
+        parser.add_argument('-y', '--yaml', type=str,
+                            help='Load configurations from a YAML file (other parameters will be ignored)')
+
         args = parser.parse_args()
 
-        # Updating configuration with parsed arguments
-        self.num_runs = args.num_runs
-        self.num_invocations = args.num_invocations
-        self.warmup_invocations = args.warmup_invocations
-        self.workers = args.workers
-        self.function = args.function
-        self.blocking = args.blocking
-        self.input_file = args.input_file
-        self.input_string = args.input_string
-        self.output_file = args.output_file
-        self.time_limit = args.time_limit
-        self.time_precision = args.time_precision
-        self.apihost = args.apihost
-        self.authorization = args.authorization
-        self.print_csv = args.print_csv
+        if args.yaml:
+            print(f"Loading configurations from {args.yaml}")
+            self.load_defaults(args.yaml)
+        else:
+            print("Loading configurations from command line arguments")
+            # Updating configuration with parsed arguments
+            self.num_runs = args.num_runs
+            self.num_invocations = args.num_invocations
+            self.warmup_invocations = args.warmup_invocations
+            self.workers = args.workers
+            self.function = args.function
+            self.blocking = args.blocking
+            self.input_file = args.input_file
+            self.input_string = args.input_string
+            self.output_file = args.output_file
+            self.time_limit = args.time_limit
+            self.time_precision = args.time_precision
+            self.apihost = args.apihost
+            self.authorization = args.authorization
+            self.print_csv = args.print_csv
+            self.verbose = args.verbose
 
-        self.verbose = args.verbose
+            if self.input_file:
+                self.payload = json.loads(open(self.input_file).read())
+            elif self.input_string:
+                self.payload = json.loads(self.input_string)
+        
         if self.verbose: log.basicConfig(format='%(message)s', level=log.INFO)
-
-        if self.input_file:
-            self.payload = json.loads(open(self.input_file).read())
-        elif self.input_string:
-            self.payload = json.loads(self.input_string)
