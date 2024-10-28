@@ -36,6 +36,7 @@ class Config:
         self.apihost = config['apihost']
         self.authorization = config['authorization']
         self.payload = config['payload']
+        self.directory = config['directory']
 
 
     def print_config(self):
@@ -59,7 +60,8 @@ class Config:
             "Time limit (s)": self.time_limit,
             "Time precision (ms)": self.time_precision,
             "APIHOST": self.apihost,
-            "Authorization": self.authorization
+            "Authorization": self.authorization,
+            "Directory": self.directory
         }
 
         if self.payload is not None:
@@ -117,6 +119,9 @@ class Config:
 
         input_group.add_argument('-s', '--input_string', type=str, default=self.input_string, metavar='',
                                  help='Input string for the function (default: {})'.format(self.input_string))
+
+        input_group.add_argument('-d', '--directory', type=str, default=self.directory, metavar='',
+                                 help='Input directory containing the input jsons (default: {})'.format(self.directory))
                                 
         parser.add_argument('-o', '--output_file', type=str, default=self.output_file, metavar='',
                             help='Output file for the function (default: {})'.format(self.output_file))
@@ -147,6 +152,7 @@ class Config:
             self.blocking = args.blocking
             self.input_file = args.input_file
             self.input_string = args.input_string
+            self.directory = args.directory
             self.output_file = args.output_file
             self.time_limit = args.time_limit
             self.time_precision = args.time_precision
@@ -159,5 +165,5 @@ class Config:
                 self.payload = json.loads(open(self.input_file).read())
             elif self.input_string:
                 self.payload = json.loads(self.input_string)
-        
+
         if self.verbose: log.basicConfig(format='%(message)s', level=log.INFO)

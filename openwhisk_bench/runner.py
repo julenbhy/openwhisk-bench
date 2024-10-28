@@ -4,7 +4,7 @@ import logging as log
 import json
 import pprint
 from .metrics import extract_metrics, benchmark_statistics, format_results, write_results_to_file_csv
-
+import os
 
 def format_response_dict(response):
     """
@@ -92,6 +92,28 @@ def bench_multiple_invocations(config, warmup=False):
         return metrics_list
 
 
+
+def run_directory_benchmark(config):
+    """
+    Executes the benchmark iterating over each json file in the specified directory as input.
+    """
+    all_metrics = []
+
+    # Iterate over each file in the directory
+    for file in os.listdir(config.directory):
+        if file.endswith(".json"):
+            with open(config.directory + '/' + file) as f:
+                config.payload = json.load(f)
+                log.info(f"\n\nRunning benchmark for file: {file}")
+                metrics_list = bench_multiple_invocations(config)
+                all_metrics.extend(metrics_list)
+                
+    return all_metrics
+
+
+
+
+
 def run_benchmark(config):
     """
     Executes the benchmark process based on the configuration.
@@ -103,11 +125,13 @@ def run_benchmark(config):
     log.info(f"\nStarting Warm-up")
     bench_multiple_invocations(config, warmup=True)
 
-    # Main benchmark runs
-    for run in range(config.num_runs):
-        log.info(f"\nStarting run {run + 1}/{config.num_runs}")
-        metrics_list = bench_multiple_invocations(config)
-        all_metrics.extend(metrics_list)
+    if config.directory:
+        all_metrics.extend(run_directory_benchmark(config))
+    else:
+        for run in range(config.num_runs):
+            log.info(f"\nStarting run {run + 1}/{config.num_runs}")
+            metrics_list = bench_multiple_invocations(config)
+            all_metrics.extend(metrics_list)
 
     # Calculate statistics
     stats = benchmark_statistics(all_metrics)
