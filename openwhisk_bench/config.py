@@ -121,7 +121,7 @@ class Config:
                                  help='Input string for the function (default: {})'.format(self.input_string))
 
         input_group.add_argument('-d', '--directory', type=str, default=self.directory, metavar='',
-                                 help='Input directory containing the input jsons (default: {})'.format(self.directory))
+                                 help='Input directory containing the input jsons (default: {})\n the whole benchmark will be runned for each of the jsons'.format(self.directory))
                                 
         parser.add_argument('-o', '--output_file', type=str, default=self.output_file, metavar='',
                             help='Output file for the function (default: {})'.format(self.output_file))
